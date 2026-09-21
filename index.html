@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>IPO Certificate — NSE</title>
+<link rel="stylesheet" href="resources/fonts/groww-huge-standard.css">
+<style>
+  @font-face {
+    font-family: 'Sohne';
+    src: url('resources/fonts/Sohne-Kraftig.otf') format('opentype');
+    font-weight: 500;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'GrowwSans';
+    src: url('resources/fonts/GrowwSans-Regular.otf') format('opentype');
+    font-weight: 400;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'GrowwSans';
+    src: url('resources/fonts/GrowwSans-Medium.otf') format('opentype');
+    font-weight: 500;
+    font-display: swap;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .mds-iconview { display: inline-flex; align-items: center; justify-content: center; }
+  .mds-iconview--medium { width: 20px; height: 20px; font-size: 20px; }
+  .mds-iconview--large { width: 24px; height: 24px; font-size: 24px; }
+
+  :root {
+    --backgroundPrimary: #FFFFFF;
+    --backgroundSecondary: #F7F7F7;
+    --backgroundTertiary: #EFF0F1;
+    --backgroundAccent: #04B488;
+    --borderPrimary: #E7E8E9;
+    --contentPrimary: #353839;
+    --contentSecondary: #7F8283;
+    --contentAccent: #04B488;
+    --contentWarning: #FFB61B;
+  }
+
+  body {
+    font-family: 'GrowwSans', -apple-system, sans-serif;
+    font-weight: 400;
+    color: var(--contentPrimary);
+    background: var(--backgroundPrimary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  .screen {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--backgroundPrimary);
+    position: relative;
+  }
+
+  /* Top App Bar */
+  .app-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--backgroundPrimary);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .app-bar-back {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--contentPrimary);
+    font-size: 24px;
+  }
+  .app-bar-title {
+    font-family: 'Sohne', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--contentPrimary);
+  }
+
+  /* Certificate Card Section */
+  .card-section {
+    padding: 0 14px;
+    perspective: 1000px;
+  }
+  .card-container {
+    width: 100%;
+    aspect-ratio: 1;
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+    border-radius: 10.5px;
+  }
+  .card-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 10.5px;
+    overflow: hidden;
+    background: white;
+  }
+  .card-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.45;
+  }
+
+  /* Holographic shine overlay */
+  .card-shine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10.5px;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    mix-blend-mode: plus-lighter;
+  }
+
+  /* Subtle edge glow */
+  .card-glow {
+    position: absolute;
+    top: -1.5px;
+    left: -1.5px;
+    right: -1.5px;
+    bottom: -1.5px;
+    border-radius: 12px;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    background: conic-gradient(
+      from var(--glow-angle, 0deg),
+      rgba(212, 175, 55, 0.2),
+      rgba(192, 192, 192, 0.15),
+      rgba(212, 175, 55, 0.2),
+      rgba(192, 192, 192, 0.15),
+      rgba(212, 175, 55, 0.2)
+    );
+    filter: blur(6px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-container { transform: none !important; }
+    .card-shine, .card-glow { display: none; }
+  }
+
+  /* Card content overlay */
+  .card-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    z-index: 1;
+  }
+  .card-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: #000;
+    padding: 3px;
+    overflow: hidden;
+  }
+  .card-logo img {
+    width: 100%;
+    height: 100%;
+    border-radius: 7.5px;
+    object-fit: contain;
+  }
+  .card-company {
+    font-family: 'Sohne', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--contentPrimary);
+    text-align: center;
+  }
+  .card-divider {
+    width: 17.5px;
+    height: 2px;
+    background: var(--contentPrimary);
+    border-radius: 1px;
+  }
+  .card-shares {
+    font-family: 'GrowwSans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--contentSecondary);
+    text-align: center;
+  }
+
+  /* Summary */
+  .summary {
+    padding: 24px 16px;
+    border-bottom: 1px solid var(--borderPrimary);
+  }
+  .summary-title {
+    font-family: 'Sohne', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--contentPrimary);
+    margin-bottom: 2px;
+  }
+  .summary-subtitle {
+    font-family: 'GrowwSans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--contentSecondary);
+  }
+
+  /* Status Section */
+  .status-section {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--borderPrimary);
+    overflow: hidden;
+  }
+  .status-heading {
+    font-family: 'Sohne', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--contentPrimary);
+    padding: 0 16px;
+    margin-bottom: 24px;
+  }
+
+  /* Steps */
+  .step {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+  }
+  .step-icon-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px;
+    flex-shrink: 0;
+    width: 52px;
+  }
+  .step-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .step-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+  .step-connector {
+    width: 2.4px;
+    flex: 1;
+    min-height: 6px;
+    background: var(--borderPrimary);
+    border-radius: 99px;
+  }
+  .step-connector-top {
+    border-radius: 0 0 99px 99px;
+  }
+  .step-connector-bottom {
+    border-radius: 99px 99px 0 0;
+  }
+  .step-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    justify-content: center;
+    padding-bottom: 4px;
+    padding-right: 16px;
+  }
+  .step-label {
+    font-family: 'GrowwSans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--contentSecondary);
+  }
+  .step-label-active {
+    font-weight: 500;
+    color: var(--contentPrimary);
+  }
+  .step-date {
+    font-family: 'GrowwSans', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--contentSecondary);
+  }
+  .step-gap {
+    display: flex;
+    justify-content: center;
+    width: 52px;
+    height: 16px;
+    padding-bottom: 6px;
+    flex-shrink: 0;
+  }
+  .step-gap .step-connector {
+    width: 2.4px;
+    height: 100%;
+    flex: none;
+  }
+
+  /* Details & Help */
+  .details-section {
+    border-bottom: 1px solid var(--borderPrimary);
+    padding-bottom: 4px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 16px 0;
+  }
+  .section-header-title {
+    flex: 1;
+    font-family: 'Sohne', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--contentPrimary);
+  }
+  .section-header-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--contentSecondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    min-height: 56px;
+  }
+  .list-item-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--contentSecondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .list-item-label {
+    flex: 1;
+    font-family: 'GrowwSans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--contentPrimary);
+  }
+  .list-item-trailing {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--contentSecondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  /* Gyro permission banner (iOS) */
+  .gyro-banner {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--contentPrimary);
+    color: white;
+    padding: 16px 24px;
+    text-align: center;
+    font-family: 'GrowwSans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 100;
+    cursor: pointer;
+  }
+
+  /* Dial Kit */
+  .dialkit-toggle {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 1000;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--borderPrimary);
+    background: var(--backgroundPrimary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .dialkit {
+    position: fixed;
+    top: 56px;
+    right: 12px;
+    z-index: 999;
+    width: 280px;
+    max-height: calc(100vh - 72px);
+    overflow-y: auto;
+    background: var(--backgroundPrimary);
+    border: 1px solid var(--borderPrimary);
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    padding: 16px;
+    font-family: 'GrowwSans', sans-serif;
+    display: none;
+  }
+  .dialkit.open { display: block; }
+  .dialkit-title {
+    font-family: 'Sohne', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--contentPrimary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .dialkit-reset {
+    font-family: 'GrowwSans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--contentAccent);
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 2px 6px;
+  }
+  .dialkit-group {
+    margin-bottom: 14px;
+  }
+  .dialkit-group-label {
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--contentSecondary);
+    margin-bottom: 8px;
+  }
+  .dialkit-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .dialkit-label {
+    font-size: 12px;
+    color: var(--contentPrimary);
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .dialkit-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--backgroundTertiary);
+    outline: none;
+  }
+  .dialkit-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--contentPrimary);
+    cursor: pointer;
+  }
+  .dialkit-value {
+    font-size: 11px;
+    color: var(--contentSecondary);
+    width: 36px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+  .dialkit-color-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .dialkit-color-input {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--borderPrimary);
+    border-radius: 6px;
+    padding: 1px;
+    cursor: pointer;
+    background: none;
+  }
+  .dialkit-sep {
+    height: 1px;
+    background: var(--borderPrimary);
+    margin: 12px 0;
+  }
+  .dialkit-export {
+    font-family: 'GrowwSans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--backgroundPrimary);
+    background: var(--contentPrimary);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 0;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+  .dialkit-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--contentPrimary);
+    color: white;
+    font-family: 'GrowwSans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: 8px;
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .dialkit-toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="screen">
+  <!-- App Bar -->
+  <div class="app-bar">
+    <div class="app-bar-back">
+      <span class="mds-iconview mds-iconview--large"><i class="gh-standard-arrow-left-01"></i></span>
+    </div>
+    <div class="app-bar-title">Application status</div>
+  </div>
+
+  <!-- Certificate Card -->
+  <div class="card-section">
+    <div class="card-container" id="gyroCard">
+      <div class="card-glow"></div>
+      <div class="card-bg">
+        <img src="certificate-bg.png" alt="Certificate background">
+      </div>
+      <div class="card-shine" id="cardShine"></div>
+      <div class="card-content">
+        <div class="card-logo">
+          <img src="nse.png" alt="NSE">
+        </div>
+        <div class="card-company">NSE</div>
+        <div class="card-divider"></div>
+        <div class="card-shares">64 Shares</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary">
+    <div class="summary-title">IPO allotted. Shares will be tradeable from 24 Sep, 10:00 AM.</div>
+    <div class="summary-subtitle">₹1,14,240 has been debited for IPO allotment.</div>
+  </div>
+
+  <!-- Status -->
+  <div class="status-section">
+    <div class="status-heading">Status</div>
+
+    <!-- Step 1: IPO applied -->
+    <div class="step">
+      <div class="step-icon-col">
+        <div class="step-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M8.833 11.5L7.042 9.708a.826.826 0 00-.583-.229.826.826 0 00-.584.23.826.826 0 00-.229.583c0 .236.076.43.229.583L8.25 13.25c.167.167.361.25.583.25s.417-.083.583-.25l4.709-4.708a.826.826 0 00.229-.584.826.826 0 00-.23-.583.826.826 0 00-.583-.23.826.826 0 00-.583.23L8.833 11.5zM10 18.333a8.222 8.222 0 01-3.25-.656 8.42 8.42 0 01-2.646-1.781 8.42 8.42 0 01-1.781-2.646A8.222 8.222 0 011.667 10c0-1.153.219-2.236.656-3.25a8.42 8.42 0 011.781-2.646A8.42 8.42 0 016.75 2.323 8.222 8.222 0 0110 1.667c1.153 0 2.236.219 3.25.656a8.42 8.42 0 012.646 1.781 8.42 8.42 0 011.781 2.646c.437 1.014.656 2.097.656 3.25 0 1.153-.219 2.236-.656 3.25a8.42 8.42 0 01-1.781 2.646 8.42 8.42 0 01-2.646 1.781 8.222 8.222 0 01-3.25.656z" fill="#04B488"/>
+          </svg>
+        </div>
+        <div class="step-connector step-connector-bottom"></div>
+      </div>
+      <div class="step-info">
+        <div class="step-label">IPO applied</div>
+        <div class="step-date">18 Sep, 12:32 PM</div>
+      </div>
+    </div>
+    <div class="step-gap"><div class="step-connector"></div></div>
+
+    <!-- Step 2: Payment approved -->
+    <div class="step">
+      <div class="step-icon-col">
+        <div class="step-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M8.833 11.5L7.042 9.708a.826.826 0 00-.583-.229.826.826 0 00-.584.23.826.826 0 00-.229.583c0 .236.076.43.229.583L8.25 13.25c.167.167.361.25.583.25s.417-.083.583-.25l4.709-4.708a.826.826 0 00.229-.584.826.826 0 00-.23-.583.826.826 0 00-.583-.23.826.826 0 00-.583.23L8.833 11.5zM10 18.333a8.222 8.222 0 01-3.25-.656 8.42 8.42 0 01-2.646-1.781 8.42 8.42 0 01-1.781-2.646A8.222 8.222 0 011.667 10c0-1.153.219-2.236.656-3.25a8.42 8.42 0 011.781-2.646A8.42 8.42 0 016.75 2.323 8.222 8.222 0 0110 1.667c1.153 0 2.236.219 3.25.656a8.42 8.42 0 012.646 1.781 8.42 8.42 0 011.781 2.646c.437 1.014.656 2.097.656 3.25 0 1.153-.219 2.236-.656 3.25a8.42 8.42 0 01-1.781 2.646 8.42 8.42 0 01-2.646 1.781 8.222 8.222 0 01-3.25.656z" fill="#04B488"/>
+          </svg>
+        </div>
+        <div class="step-connector step-connector-bottom"></div>
+      </div>
+      <div class="step-info">
+        <div class="step-label">Payment approved</div>
+        <div class="step-date">20 Sep</div>
+      </div>
+    </div>
+    <div class="step-gap"><div class="step-connector"></div></div>
+
+    <!-- Step 3: Allotment announced -->
+    <div class="step">
+      <div class="step-icon-col">
+        <div class="step-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M8.833 11.5L7.042 9.708a.826.826 0 00-.583-.229.826.826 0 00-.584.23.826.826 0 00-.229.583c0 .236.076.43.229.583L8.25 13.25c.167.167.361.25.583.25s.417-.083.583-.25l4.709-4.708a.826.826 0 00.229-.584.826.826 0 00-.23-.583.826.826 0 00-.583-.23.826.826 0 00-.583.23L8.833 11.5zM10 18.333a8.222 8.222 0 01-3.25-.656 8.42 8.42 0 01-2.646-1.781 8.42 8.42 0 01-1.781-2.646A8.222 8.222 0 011.667 10c0-1.153.219-2.236.656-3.25a8.42 8.42 0 011.781-2.646A8.42 8.42 0 016.75 2.323 8.222 8.222 0 0110 1.667c1.153 0 2.236.219 3.25.656a8.42 8.42 0 012.646 1.781 8.42 8.42 0 011.781 2.646c.437 1.014.656 2.097.656 3.25 0 1.153-.219 2.236-.656 3.25a8.42 8.42 0 01-1.781 2.646 8.42 8.42 0 01-2.646 1.781 8.222 8.222 0 01-3.25.656z" fill="#04B488"/>
+          </svg>
+        </div>
+        <div class="step-connector step-connector-bottom"></div>
+      </div>
+      <div class="step-info">
+        <div class="step-label step-label-active">Allotment announced</div>
+      </div>
+    </div>
+    <div class="step-gap"><div class="step-connector"></div></div>
+
+    <!-- Step 4: Awaiting listing -->
+    <div class="step">
+      <div class="step-icon-col">
+        <div class="step-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 14.167c1.153 0 2.135-.407 2.948-1.22.813-.812 1.219-1.794 1.219-2.947 0-1.153-.406-2.135-1.22-2.948C12.136 6.24 11.153 5.833 10 5.833c-1.153 0-2.135.407-2.948 1.22C6.24 7.864 5.833 8.846 5.833 10c0 1.153.407 2.135 1.22 2.948.812.813 1.794 1.219 2.947 1.219zM10 18.333a8.222 8.222 0 01-3.25-.656 8.42 8.42 0 01-2.646-1.781 8.42 8.42 0 01-1.781-2.646A8.222 8.222 0 011.667 10c0-1.153.219-2.236.656-3.25a8.42 8.42 0 011.781-2.646A8.42 8.42 0 016.75 2.323 8.222 8.222 0 0110 1.667c1.153 0 2.236.219 3.25.656a8.42 8.42 0 012.646 1.781 8.42 8.42 0 011.781 2.646c.437 1.014.656 2.097.656 3.25 0 1.153-.219 2.236-.656 3.25a8.42 8.42 0 01-1.781 2.646 8.42 8.42 0 01-2.646 1.781 8.222 8.222 0 01-3.25.656zm0-1.666c1.861 0 3.438-.646 4.729-1.938C16.02 13.438 16.667 11.86 16.667 10c0-1.861-.646-3.438-1.938-4.73C13.438 3.98 11.86 3.334 10 3.334c-1.861 0-3.438.646-4.73 1.938C3.98 6.563 3.334 8.14 3.334 10c0 1.861.646 3.438 1.938 4.73C6.563 16.02 8.14 16.666 10 16.666z" fill="#FFB61B"/>
+          </svg>
+        </div>
+      </div>
+      <div class="step-info">
+        <div class="step-label">Awaiting listing on exchange</div>
+        <div class="step-date">24 Sep</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Details -->
+  <div class="details-section">
+    <div class="section-header">
+      <div class="section-header-title">Application details</div>
+      <div class="section-header-icon">
+        <span class="mds-iconview mds-iconview--large"><i class="gh-standard-arrow-down-01"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Need Help -->
+  <div class="list-item">
+    <div class="list-item-icon">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M10 15c.283 0 .52-.096.713-.287A.968.968 0 0011 14a.968.968 0 00-.287-.713A.968.968 0 0010 13a.968.968 0 00-.713.287A.968.968 0 009 14c0 .283.096.52.287.713.192.191.43.287.713.287zm-.75-3.5h1.5a3.372 3.372 0 01.25-1.188c.167-.395.5-.77 1-1.125.383-.283.7-.587.95-.912.25-.325.375-.72.375-1.188 0-.833-.288-1.458-.862-1.875C11.887 4.896 11.2 4.688 10.4 4.688c-.717 0-1.346.196-1.887.587-.542.392-.913.93-1.113 1.613l1.35.55c.1-.35.3-.646.6-.887.3-.242.633-.363 1-.363.417 0 .746.113.988.338.241.225.362.487.362.787 0 .267-.083.52-.25.762-.167.242-.383.463-.65.663-.533.433-.883.817-1.05 1.15-.167.333-.25.845-.25 1.537zM10 18.333a8.222 8.222 0 01-3.25-.656 8.42 8.42 0 01-2.646-1.781 8.42 8.42 0 01-1.781-2.646A8.222 8.222 0 011.667 10c0-1.153.219-2.236.656-3.25a8.42 8.42 0 011.781-2.646A8.42 8.42 0 016.75 2.323 8.222 8.222 0 0110 1.667c1.153 0 2.236.219 3.25.656a8.42 8.42 0 012.646 1.781 8.42 8.42 0 011.781 2.646c.437 1.014.656 2.097.656 3.25 0 1.153-.219 2.236-.656 3.25a8.42 8.42 0 01-1.781 2.646 8.42 8.42 0 01-2.646 1.781 8.222 8.222 0 01-3.25.656z" fill="#7F8283"/>
+      </svg>
+    </div>
+    <div class="list-item-label">Need help?</div>
+    <div class="list-item-trailing">
+      <span class="mds-iconview mds-iconview--medium"><i class="gh-standard-arrow-right-01"></i></span>
+    </div>
+  </div>
+</div>
+
+<!-- iOS gyro permission banner -->
+<div class="gyro-banner" id="gyroBanner" onclick="requestGyroPermission()">
+  Tap to enable tilt effect
+</div>
+
+<!-- Dial Kit -->
+<button class="dialkit-toggle" id="dialkitToggle" title="Tweak effect">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.32 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+</button>
+<div class="dialkit" id="dialkit">
+  <div class="dialkit-title">
+    Certificate Effect
+    <button class="dialkit-reset" id="dialkitReset">Reset</button>
+  </div>
+
+  <div class="dialkit-group">
+    <div class="dialkit-group-label">Tilt</div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Max angle</span>
+      <input type="range" class="dialkit-slider" id="dk-maxTilt" min="2" max="25" step="0.5">
+      <span class="dialkit-value" id="dk-maxTilt-v"></span>
+    </div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Perspective</span>
+      <input type="range" class="dialkit-slider" id="dk-perspective" min="400" max="2400" step="50">
+      <span class="dialkit-value" id="dk-perspective-v"></span>
+    </div>
+  </div>
+
+  <div class="dialkit-sep"></div>
+
+  <div class="dialkit-group">
+    <div class="dialkit-group-label">Spring</div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Stiffness</span>
+      <input type="range" class="dialkit-slider" id="dk-stiffness" min="0.01" max="0.3" step="0.005">
+      <span class="dialkit-value" id="dk-stiffness-v"></span>
+    </div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Damping</span>
+      <input type="range" class="dialkit-slider" id="dk-damping" min="0.4" max="0.95" step="0.01">
+      <span class="dialkit-value" id="dk-damping-v"></span>
+    </div>
+  </div>
+
+  <div class="dialkit-sep"></div>
+
+  <div class="dialkit-group">
+    <div class="dialkit-group-label">Shine</div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Intensity</span>
+      <input type="range" class="dialkit-slider" id="dk-shineIntensity" min="0" max="0.6" step="0.02">
+      <span class="dialkit-value" id="dk-shineIntensity-v"></span>
+    </div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Spread</span>
+      <input type="range" class="dialkit-slider" id="dk-shineSpread" min="20" max="90" step="1">
+      <span class="dialkit-value" id="dk-shineSpread-v"></span>
+    </div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Warmth</span>
+      <input type="range" class="dialkit-slider" id="dk-shineWarmth" min="0" max="50" step="1">
+      <span class="dialkit-value" id="dk-shineWarmth-v"></span>
+    </div>
+  </div>
+
+  <div class="dialkit-sep"></div>
+
+  <div class="dialkit-group">
+    <div class="dialkit-group-label">Glow</div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Opacity</span>
+      <input type="range" class="dialkit-slider" id="dk-glowOpacity" min="0" max="1" step="0.05">
+      <span class="dialkit-value" id="dk-glowOpacity-v"></span>
+    </div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Blur</span>
+      <input type="range" class="dialkit-slider" id="dk-glowBlur" min="0" max="20" step="0.5">
+      <span class="dialkit-value" id="dk-glowBlur-v"></span>
+    </div>
+    <div class="dialkit-color-row">
+      <span class="dialkit-label">Color 1</span>
+      <input type="color" class="dialkit-color-input" id="dk-glowColor1" value="#d4af37">
+    </div>
+    <div class="dialkit-color-row">
+      <span class="dialkit-label">Color 2</span>
+      <input type="color" class="dialkit-color-input" id="dk-glowColor2" value="#c0c0c0">
+    </div>
+  </div>
+
+  <div class="dialkit-sep"></div>
+
+  <div class="dialkit-group">
+    <div class="dialkit-group-label">Background</div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Opacity</span>
+      <input type="range" class="dialkit-slider" id="dk-bgOpacity" min="0.1" max="1" step="0.05">
+      <span class="dialkit-value" id="dk-bgOpacity-v"></span>
+    </div>
+  </div>
+
+  <div class="dialkit-sep"></div>
+
+  <div class="dialkit-group">
+    <div class="dialkit-group-label">Scale</div>
+    <div class="dialkit-row">
+      <span class="dialkit-label">Factor</span>
+      <input type="range" class="dialkit-slider" id="dk-scaleFactor" min="0" max="0.01" step="0.0005">
+      <span class="dialkit-value" id="dk-scaleFactor-v"></span>
+    </div>
+  </div>
+
+  <div class="dialkit-sep"></div>
+  <button class="dialkit-export" id="dialkitExport">Copy values as JSON</button>
+</div>
+<div class="dialkit-toast" id="dialkitToast">Copied to clipboard</div>
+
+<script>
+(function() {
+  var card = document.getElementById('gyroCard');
+  var shine = document.getElementById('cardShine');
+  var glow = card.querySelector('.card-glow');
+  var banner = document.getElementById('gyroBanner');
+
+  var defaults = {
+    maxTilt: 10,
+    perspective: 1200,
+    stiffness: 0.06,
+    damping: 0.82,
+    shineIntensity: 0.18,
+    shineSpread: 75,
+    shineWarmth: 7,
+    glowOpacity: 0.6,
+    glowBlur: 6,
+    glowColor1: '#d4af37',
+    glowColor2: '#c0c0c0',
+    scaleFactor: 0.001,
+    bgOpacity: 0.45
+  };
+
+  var p = {};
+  Object.keys(defaults).forEach(function(k) { p[k] = defaults[k]; });
+
+  var isGyroAvailable = false;
+  var currentRotateX = 0, currentRotateY = 0;
+  var targetRotateX = 0, targetRotateY = 0;
+  var velocityX = 0, velocityY = 0;
+
+  function hexToRgba(hex, alpha) {
+    var r = parseInt(hex.slice(1,3), 16);
+    var g = parseInt(hex.slice(3,5), 16);
+    var b = parseInt(hex.slice(5,7), 16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+  }
+
+  function updateGlow() {
+    glow.style.filter = 'blur(' + p.glowBlur + 'px)';
+    glow.style.background =
+      'conic-gradient(from var(--glow-angle, 0deg), ' +
+      hexToRgba(p.glowColor1, 0.2) + ', ' +
+      hexToRgba(p.glowColor2, 0.15) + ', ' +
+      hexToRgba(p.glowColor1, 0.2) + ', ' +
+      hexToRgba(p.glowColor2, 0.15) + ', ' +
+      hexToRgba(p.glowColor1, 0.2) + ')';
+  }
+
+  var isSettled = true;
+
+  function updateCard() {
+    var forceX = (targetRotateX - currentRotateX) * p.stiffness;
+    var forceY = (targetRotateY - currentRotateY) * p.stiffness;
+    velocityX = (velocityX + forceX) * p.damping;
+    velocityY = (velocityY + forceY) * p.damping;
+    currentRotateX += velocityX;
+    currentRotateY += velocityY;
+
+    var tiltMag = Math.sqrt(currentRotateX * currentRotateX + currentRotateY * currentRotateY);
+    var tiltNorm = Math.min(tiltMag / p.maxTilt, 1);
+    var sc = 1 + tiltMag * p.scaleFactor;
+
+    if (tiltMag > 0.01 || Math.abs(velocityX) > 0.001 || Math.abs(velocityY) > 0.001) {
+      if (isSettled) {
+        card.style.willChange = 'transform';
+        isSettled = false;
+      }
+    } else if (!isSettled) {
+      card.style.willChange = 'auto';
+      isSettled = true;
+    }
+
+    card.style.transform =
+      'perspective(' + p.perspective + 'px) rotateX(' + currentRotateX.toFixed(3) +
+      'deg) rotateY(' + currentRotateY.toFixed(3) + 'deg) scale3d(' +
+      sc.toFixed(4) + ',' + sc.toFixed(4) + ',1)';
+
+    shine.style.opacity = (tiltNorm * 0.85 + 0.15 * (tiltNorm > 0.01 ? 1 : 0)).toFixed(3);
+    glow.style.opacity = (tiltNorm * p.glowOpacity).toFixed(3);
+
+    var shineX = 50 + (currentRotateY / p.maxTilt) * 25;
+    var shineY = 50 - (currentRotateX / p.maxTilt) * 25;
+
+    var hueShift = Math.atan2(currentRotateY, currentRotateX) * (180 / Math.PI);
+    var warmHue = (40 + hueShift * 0.15) % 360;
+    var si = p.shineIntensity;
+    var sp = p.shineSpread;
+
+    shine.style.background =
+      'radial-gradient(ellipse at ' + shineX + '% ' + shineY + '%, ' +
+      'hsla(' + warmHue.toFixed(0) + ', 30%, 92%, ' + si + ') 0%, ' +
+      'hsla(' + ((warmHue + 20) % 360).toFixed(0) + ', 15%, 95%, ' + (si * 0.35).toFixed(3) + ') 35%, ' +
+      'rgba(255,255,255,' + (si * 0.08).toFixed(3) + ') 55%, ' +
+      'transparent ' + sp + '%)';
+
+    var glowAngle = Math.atan2(currentRotateY, currentRotateX) * (180 / Math.PI);
+    card.style.setProperty('--glow-angle', glowAngle + 'deg');
+
+    requestAnimationFrame(updateCard);
+  }
+
+  card.addEventListener('mousemove', function(e) {
+    if (isGyroAvailable) return;
+    var rect = card.getBoundingClientRect();
+    var mx = e.clientX - rect.left - rect.width / 2;
+    var my = e.clientY - rect.top - rect.height / 2;
+    targetRotateY = Math.max(-p.maxTilt, Math.min(p.maxTilt, (mx / (rect.width / 2)) * p.maxTilt));
+    targetRotateX = Math.max(-p.maxTilt, Math.min(p.maxTilt, -(my / (rect.height / 2)) * p.maxTilt));
+  });
+
+  card.addEventListener('mouseleave', function() {
+    if (isGyroAvailable) return;
+    targetRotateX = 0;
+    targetRotateY = 0;
+  });
+
+  function handleOrientation(e) {
+    isGyroAvailable = true;
+    var beta = (e.beta || 0) - 45;
+    var gamma = e.gamma || 0;
+    targetRotateX = Math.max(-p.maxTilt, Math.min(p.maxTilt, -(beta / 3)));
+    targetRotateY = Math.max(-p.maxTilt, Math.min(p.maxTilt, gamma / 3));
+  }
+
+  if (typeof DeviceOrientationEvent !== 'undefined' &&
+      typeof DeviceOrientationEvent.requestPermission === 'function') {
+    banner.style.display = 'block';
+  } else if ('DeviceOrientationEvent' in window) {
+    window.addEventListener('deviceorientation', handleOrientation);
+  }
+
+  updateGlow();
+  requestAnimationFrame(updateCard);
+
+  window.requestGyroPermission = function() {
+    DeviceOrientationEvent.requestPermission()
+      .then(function(state) {
+        if (state === 'granted') window.addEventListener('deviceorientation', handleOrientation);
+        banner.style.display = 'none';
+      })
+      .catch(function() { banner.style.display = 'none'; });
+  };
+
+  // --- Dial Kit wiring ---
+  var panel = document.getElementById('dialkit');
+  var toggle = document.getElementById('dialkitToggle');
+  var toast = document.getElementById('dialkitToast');
+
+  toggle.addEventListener('click', function() { panel.classList.toggle('open'); });
+
+  var sliders = {
+    maxTilt:        { el: 'dk-maxTilt',        fmt: function(v){ return v + '°'; } },
+    perspective:    { el: 'dk-perspective',     fmt: function(v){ return v + 'px'; } },
+    stiffness:      { el: 'dk-stiffness',      fmt: function(v){ return v.toFixed(3); } },
+    damping:        { el: 'dk-damping',         fmt: function(v){ return v.toFixed(2); } },
+    shineIntensity: { el: 'dk-shineIntensity',  fmt: function(v){ return (v * 100).toFixed(0) + '%'; } },
+    shineSpread:    { el: 'dk-shineSpread',     fmt: function(v){ return v + '%'; } },
+    shineWarmth:    { el: 'dk-shineWarmth',     fmt: function(v){ return v.toFixed(0); } },
+    glowOpacity:    { el: 'dk-glowOpacity',     fmt: function(v){ return (v * 100).toFixed(0) + '%'; } },
+    glowBlur:       { el: 'dk-glowBlur',        fmt: function(v){ return v + 'px'; } },
+    scaleFactor:    { el: 'dk-scaleFactor',      fmt: function(v){ return v.toFixed(4); } },
+    bgOpacity:      { el: 'dk-bgOpacity',        fmt: function(v){ return (v * 100).toFixed(0) + '%'; } }
+  };
+
+  var bgImg = card.querySelector('.card-bg img');
+
+  function syncSliders() {
+    Object.keys(sliders).forEach(function(key) {
+      var s = sliders[key];
+      var input = document.getElementById(s.el);
+      var valEl = document.getElementById(s.el + '-v');
+      input.value = p[key];
+      valEl.textContent = s.fmt(p[key]);
+    });
+    document.getElementById('dk-glowColor1').value = p.glowColor1;
+    document.getElementById('dk-glowColor2').value = p.glowColor2;
+  }
+
+  Object.keys(sliders).forEach(function(key) {
+    var s = sliders[key];
+    var input = document.getElementById(s.el);
+    var valEl = document.getElementById(s.el + '-v');
+    input.addEventListener('input', function() {
+      p[key] = parseFloat(input.value);
+      valEl.textContent = s.fmt(p[key]);
+      if (key === 'glowBlur') updateGlow();
+      if (key === 'bgOpacity') bgImg.style.opacity = p.bgOpacity;
+    });
+  });
+
+  document.getElementById('dk-glowColor1').addEventListener('input', function(e) {
+    p.glowColor1 = e.target.value; updateGlow();
+  });
+  document.getElementById('dk-glowColor2').addEventListener('input', function(e) {
+    p.glowColor2 = e.target.value; updateGlow();
+  });
+
+  document.getElementById('dialkitReset').addEventListener('click', function() {
+    Object.keys(defaults).forEach(function(k) { p[k] = defaults[k]; });
+    syncSliders(); updateGlow();
+  });
+
+  document.getElementById('dialkitExport').addEventListener('click', function() {
+    var json = JSON.stringify(p, null, 2);
+    navigator.clipboard.writeText(json).then(function() {
+      toast.classList.add('show');
+      setTimeout(function() { toast.classList.remove('show'); }, 1500);
+    });
+  });
+
+  syncSliders();
+})();
+</script>
+</body>
+</html>
