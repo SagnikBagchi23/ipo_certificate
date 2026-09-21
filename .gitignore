@@ -1,2 +1,6 @@
 .DS_Store
 .claude/
+*.zip
+mint-ds-*.md
+rules-groww-*.md
+mint-ds-resources*/
