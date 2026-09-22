@@ -32,14 +32,14 @@
   .mds-iconview--large { width: 24px; height: 24px; font-size: 24px; }
 
   :root {
-    --backgroundPrimary: #060809;
-    --backgroundSecondary: #151819;
-    --backgroundTertiary: #1E2224;
-    --backgroundAccent: #04B488;
-    --borderPrimary: #252A2C;
-    --contentPrimary: #F2F5F7;
-    --contentSecondary: #989EA0;
-    --contentAccent: #04B488;
+    --backgroundPrimary: #FFFFFF;
+    --backgroundSecondary: #F2F5F7;
+    --backgroundTertiary: #E8EBED;
+    --backgroundAccent: #00B386;
+    --borderPrimary: #D1D6D8;
+    --contentPrimary: #121415;
+    --contentSecondary: #7F8283;
+    --contentAccent: #00B386;
     --contentWarning: #E7A71E;
   }
 
@@ -113,12 +113,13 @@
     left: 0;
     border-radius: 10.5px;
     overflow: hidden;
-    background: var(--backgroundPrimary);
+    background: white;
   }
   .card-bg img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0.45;
   }
 
   /* Holographic shine overlay */
@@ -568,7 +569,7 @@
     <div class="card-container" id="gyroCard">
       <div class="card-glow"></div>
       <div class="card-bg">
-        <img src="certificate-bg-dark.png" alt="Certificate background">
+        <img src="certificate-bg.png" alt="Certificate background">
       </div>
       <div class="card-shine" id="cardShine"></div>
       <div class="card-content">
@@ -815,7 +816,7 @@
     glowColor1: '#202137',
     glowColor2: '#c0c0c0',
     scaleFactor: 0.001,
-    bgOpacity: 1
+    bgOpacity: 0.45
   };
 
   var p = {};
