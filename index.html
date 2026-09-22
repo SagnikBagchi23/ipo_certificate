@@ -119,7 +119,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.45;
+    opacity: 0.85;
   }
 
   /* Holographic shine overlay */
@@ -151,11 +151,11 @@
     transition: opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     background: conic-gradient(
       from var(--glow-angle, 0deg),
-      rgba(212, 175, 55, 0.2),
-      rgba(192, 192, 192, 0.15),
-      rgba(212, 175, 55, 0.2),
-      rgba(192, 192, 192, 0.15),
-      rgba(212, 175, 55, 0.2)
+      rgba(212, 175, 55, 0.25),
+      rgba(232, 213, 163, 0.18),
+      rgba(212, 175, 55, 0.25),
+      rgba(232, 213, 163, 0.18),
+      rgba(212, 175, 55, 0.25)
     );
     filter: blur(6px);
   }
@@ -813,19 +813,19 @@
   var glow = card.querySelector('.card-glow');
 
   var defaults = {
-    maxTilt: 2,
+    maxTilt: 8,
     perspective: 750,
-    stiffness: 0.06,
-    damping: 0.82,
-    shineIntensity: 0.18,
-    shineSpread: 75,
+    stiffness: 0.12,
+    damping: 0.78,
+    shineIntensity: 0.35,
+    shineSpread: 65,
     shineWarmth: 7,
     glowOpacity: 0.6,
     glowBlur: 6,
-    glowColor1: '#202137',
-    glowColor2: '#c0c0c0',
-    scaleFactor: 0.001,
-    bgOpacity: 0.45
+    glowColor1: '#d4af37',
+    glowColor2: '#e8d5a3',
+    scaleFactor: 0.003,
+    bgOpacity: 0.85
   };
 
   var p = {};
@@ -926,17 +926,42 @@
     isGyroAvailable = true;
     var beta = (e.beta || 0) - 45;
     var gamma = e.gamma || 0;
-    targetRotateX = Math.max(-p.maxTilt, Math.min(p.maxTilt, -(beta / 3)));
-    targetRotateY = Math.max(-p.maxTilt, Math.min(p.maxTilt, gamma / 3));
+    targetRotateX = Math.max(-p.maxTilt, Math.min(p.maxTilt, -(beta / 4) * (p.maxTilt / 8)));
+    targetRotateY = Math.max(-p.maxTilt, Math.min(p.maxTilt, (gamma / 4) * (p.maxTilt / 8)));
+  }
+
+  var gyroPermissionRequested = false;
+
+  function requestGyroPermission() {
+    if (gyroPermissionRequested) return;
+    gyroPermissionRequested = true;
+    DeviceOrientationEvent.requestPermission()
+      .then(function(state) {
+        if (state === 'granted') {
+          window.addEventListener('deviceorientation', handleOrientation);
+          var hint = document.getElementById('gyroHint');
+          if (hint) hint.remove();
+        }
+      })
+      .catch(function() { gyroPermissionRequested = false; });
   }
 
   if (typeof DeviceOrientationEvent !== 'undefined' &&
       typeof DeviceOrientationEvent.requestPermission === 'function') {
-    DeviceOrientationEvent.requestPermission()
-      .then(function(state) {
-        if (state === 'granted') window.addEventListener('deviceorientation', handleOrientation);
-      })
-      .catch(function() {});
+    // iOS requires a user gesture — tap the card to activate
+    card.addEventListener('click', requestGyroPermission, { once: false });
+    card.addEventListener('touchstart', requestGyroPermission, { once: false, passive: true });
+
+    // Show a subtle hint on iOS
+    var hint = document.createElement('div');
+    hint.id = 'gyroHint';
+    hint.style.cssText = 'text-align:center;font-size:12px;color:var(--contentSecondary);padding:8px 0 0;opacity:0;animation:fadeInHint 0.6s 0.8s ease-out forwards;';
+    hint.textContent = 'Tap the card to enable tilt effect';
+    card.parentElement.appendChild(hint);
+
+    var styleEl = document.createElement('style');
+    styleEl.textContent = '@keyframes fadeInHint{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}';
+    document.head.appendChild(styleEl);
   } else if ('DeviceOrientationEvent' in window) {
     window.addEventListener('deviceorientation', handleOrientation);
   }
