@@ -113,13 +113,12 @@
     left: 0;
     border-radius: 10.5px;
     overflow: hidden;
-    background: white;
+    background: var(--backgroundPrimary);
   }
   .card-bg img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.45;
   }
 
   /* Holographic shine overlay */
@@ -395,23 +394,6 @@
     font-size: 20px;
   }
 
-  /* Gyro permission banner (iOS) */
-  .gyro-banner {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--contentPrimary);
-    color: white;
-    padding: 16px 24px;
-    text-align: center;
-    font-family: 'GrowwSans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    z-index: 100;
-    cursor: pointer;
-  }
 
   /* Dial Kit */
   .dialkit-toggle {
@@ -586,7 +568,7 @@
     <div class="card-container" id="gyroCard">
       <div class="card-glow"></div>
       <div class="card-bg">
-        <img src="certificate-bg.png" alt="Certificate background">
+        <img src="certificate-bg-dark.png" alt="Certificate background">
       </div>
       <div class="card-shine" id="cardShine"></div>
       <div class="card-content">
@@ -701,10 +683,6 @@
   </div>
 </div>
 
-<!-- iOS gyro permission banner -->
-<div class="gyro-banner" id="gyroBanner" onclick="requestGyroPermission()">
-  Tap to enable tilt effect
-</div>
 
 <!-- Dial Kit -->
 <button class="dialkit-toggle" id="dialkitToggle" title="Tweak effect">
@@ -823,7 +801,6 @@
   var card = document.getElementById('gyroCard');
   var shine = document.getElementById('cardShine');
   var glow = card.querySelector('.card-glow');
-  var banner = document.getElementById('gyroBanner');
 
   var defaults = {
     maxTilt: 2,
@@ -838,7 +815,7 @@
     glowColor1: '#202137',
     glowColor2: '#c0c0c0',
     scaleFactor: 0.001,
-    bgOpacity: 0.45
+    bgOpacity: 1
   };
 
   var p = {};
@@ -945,22 +922,22 @@
 
   if (typeof DeviceOrientationEvent !== 'undefined' &&
       typeof DeviceOrientationEvent.requestPermission === 'function') {
-    banner.style.display = 'block';
+    var gyroRequested = false;
+    card.addEventListener('click', function() {
+      if (gyroRequested) return;
+      gyroRequested = true;
+      DeviceOrientationEvent.requestPermission()
+        .then(function(state) {
+          if (state === 'granted') window.addEventListener('deviceorientation', handleOrientation);
+        })
+        .catch(function() {});
+    });
   } else if ('DeviceOrientationEvent' in window) {
     window.addEventListener('deviceorientation', handleOrientation);
   }
 
   updateGlow();
   requestAnimationFrame(updateCard);
-
-  window.requestGyroPermission = function() {
-    DeviceOrientationEvent.requestPermission()
-      .then(function(state) {
-        if (state === 'granted') window.addEventListener('deviceorientation', handleOrientation);
-        banner.style.display = 'none';
-      })
-      .catch(function() { banner.style.display = 'none'; });
-  };
 
   // --- Dial Kit wiring ---
   var panel = document.getElementById('dialkit');
