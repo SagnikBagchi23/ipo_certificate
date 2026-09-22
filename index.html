@@ -360,7 +360,7 @@
   /* Certificate Card Section */
   .card-section {
     padding: 12px 14px 0;
-    perspective: 750px;
+    perspective: 700px;
     overflow: visible;
   }
   .card-container {
@@ -445,6 +445,7 @@
     justify-content: center;
     gap: 12px;
     z-index: 1;
+    transform-style: preserve-3d;
   }
   .card-text-group {
     display: flex;
@@ -1196,8 +1197,9 @@
       isSettled = true;
     }
 
+    card.parentElement.style.perspective = p.perspective + 'px';
     card.style.transform =
-      'perspective(' + p.perspective + 'px) rotateX(' + currentRotateX.toFixed(3) +
+      'rotateX(' + currentRotateX.toFixed(3) +
       'deg) rotateY(' + currentRotateY.toFixed(3) + 'deg) scale3d(' +
       sc.toFixed(4) + ',' + sc.toFixed(4) + ',1)';
 
