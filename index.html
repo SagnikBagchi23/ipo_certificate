@@ -939,8 +939,6 @@
       .then(function(state) {
         if (state === 'granted') {
           window.addEventListener('deviceorientation', handleOrientation);
-          var hint = document.getElementById('gyroHint');
-          if (hint) hint.remove();
         }
       })
       .catch(function() { gyroPermissionRequested = false; });
@@ -952,16 +950,6 @@
     card.addEventListener('click', requestGyroPermission, { once: false });
     card.addEventListener('touchstart', requestGyroPermission, { once: false, passive: true });
 
-    // Show a subtle hint on iOS
-    var hint = document.createElement('div');
-    hint.id = 'gyroHint';
-    hint.style.cssText = 'text-align:center;font-size:12px;color:var(--contentSecondary);padding:8px 0 0;opacity:0;animation:fadeInHint 0.6s 0.8s ease-out forwards;';
-    hint.textContent = 'Tap the card to enable tilt effect';
-    card.parentElement.appendChild(hint);
-
-    var styleEl = document.createElement('style');
-    styleEl.textContent = '@keyframes fadeInHint{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}';
-    document.head.appendChild(styleEl);
   } else if ('DeviceOrientationEvent' in window) {
     window.addEventListener('deviceorientation', handleOrientation);
   }
