@@ -6,6 +6,9 @@
 <title>IPO Certificate — NSE</title>
 <link rel="stylesheet" href="resources/fonts/groww-huge-standard.css">
 <style>
+  *, *::before, *::after {
+    cursor: none !important;
+  }
   @font-face {
     font-family: 'Sohne';
     src: url('resources/fonts/Sohne-Kraftig.otf') format('opentype');
@@ -115,7 +118,6 @@
         0 40px 80px rgba(0,0,0,0.5),
         0 0 0 1px rgba(0,0,0,0.3);
       flex-shrink: 0;
-      transform: scale(1);
       transform-origin: center center;
     }
 
@@ -660,7 +662,11 @@
   }
 
 
-  /* Dial Kit */
+  /* Dial Kit — hidden on mobile */
+  .dialkit-toggle,
+  .dialkit {
+    display: none;
+  }
   .dialkit-toggle {
     position: fixed;
     top: 12px;
@@ -1110,6 +1116,15 @@
 
 <script>
 (function() {
+  var mockup = document.querySelector('.phone-mockup');
+  function fitMockup() {
+    if (!mockup || window.innerWidth <= 600) return;
+    var s = Math.min(1, (window.innerHeight - 48) / 880);
+    mockup.style.transform = 'scale(' + s + ')';
+  }
+  fitMockup();
+  window.addEventListener('resize', fitMockup);
+
   var card = document.getElementById('gyroCard');
   var shine = document.getElementById('cardShine');
   var glow = card.querySelector('.card-glow');
