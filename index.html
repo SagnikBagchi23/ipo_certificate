@@ -1203,12 +1203,6 @@
       'deg) rotateY(' + currentRotateY.toFixed(3) + 'deg) scale3d(' +
       sc.toFixed(4) + ',' + sc.toFixed(4) + ',1)';
 
-    var shadowX = (-currentRotateY / p.maxTilt * 8).toFixed(1);
-    var shadowY = (currentRotateX / p.maxTilt * 8).toFixed(1);
-    var shadowBlur = (4 + tiltNorm * 20).toFixed(1);
-    var shadowAlpha = (tiltNorm * 0.18).toFixed(3);
-    card.style.boxShadow = shadowX + 'px ' + shadowY + 'px ' + shadowBlur + 'px rgba(0,0,0,' + shadowAlpha + ')';
-
     shine.style.opacity = (tiltNorm * 0.85 + 0.15 * (tiltNorm > 0.01 ? 1 : 0)).toFixed(3);
     var glowVal = tiltNorm * p.glowOpacity;
     glow.style.opacity = glowVal.toFixed(3);
